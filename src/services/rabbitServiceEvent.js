@@ -4,18 +4,12 @@ import { sendEmail } from "../controllers/emailController.js";
 
 dotenv.config();
 
-const RABBIT_URL = process.env.RABBIT_HOST;
+const RABBIT_URL = process.env.RABBIT_URL;
 const QUEUE_NAME = "user_created_queue";
 
 export const userEvents = async () => {
     try {
-        const connection = await amqp.connect({
-            protocol: "amqp",
-            hostname: process.env.RABBIT_HOST,
-            port:5672,
-            username: process.env.RABBIT_USER,
-            password: process.env.RABBIT_PASS
-          });
+        const connection = await amqp.connect(RABBIT_URL);
           const channel = await connection.createChannel();
 
         await channel.assertQueue(QUEUE_NAME, { durable: true });
